@@ -50,7 +50,7 @@
 		override public function update():void {
 			var now:Date = new Date();
 			if (now.getTime() - time > tdelay) {
-				if (collide("block", 0, 7) || y + 7 + 21 > 142) {
+				if (collide("block", 0, 7) || outOfBounds(0, 7)) {
 					for (var k:int = 0; k < squares.length; k++) {
 						squares[k].setCollisionType("block");
 					}
@@ -63,7 +63,7 @@
 			}
 			
 			if (Input.check("left")) {
-				if (x - 7 >= 0 && !collide("block", -7, 0) && !leftp) {
+				if (!outOfBounds(-7, 0) && !collide("block", -7, 0) && !leftp) {
 					x -= 7;
 					leftp = true;
 				}
@@ -72,7 +72,7 @@
 			}
 			
 			if (Input.check("right")) {
-				if (x + 14 < 71 && !collide("block", 7, 0) && !rightp) {
+				if (!outOfBounds(7, 0) && !collide("block", 7, 0) && !rightp) {
 					x += 7;
 					rightp = true;
 				}
@@ -141,8 +141,25 @@
 			
 			for (var k:int = 0; k < squares.length; k++) {
 				returnVal = squares[k].collide(type, squares[k].x + dx, squares[k].y + dy);
-				trace(returnVal);
 				if (returnVal != null) break;
+			}
+			
+			return returnVal;
+		}
+		
+		private function outOfBounds(dx:int, dy:int):Boolean {
+			var returnVal:Boolean = false;
+			
+			var nx:int = 0, ny:int = 0;
+			for (var k:int = 0; k < squares.length && !returnVal; k++) {
+				nx = squares[k].x + dx;
+				ny = squares[k].y + dy;
+				
+				returnVal = returnVal 
+					|| nx < playfield.playfieldLeft 
+					|| nx + 7 > playfield.playfieldRight
+					|| ny < playfield.playfieldTop
+					|| ny + 7 > playfield.playfieldBottom;
 			}
 			
 			return returnVal;
