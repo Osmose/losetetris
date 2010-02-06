@@ -53,7 +53,10 @@
 				if (collide("block", 0, 7) || outOfBounds(0, 7)) {
 					for (var k:int = 0; k < squares.length; k++) {
 						squares[k].setCollisionType("block");
+						playfield.rows[squares[k].gridY][squares[k].gridX] = squares[k];
 					}
+					
+					playfield.checkLines();
 					playfield.addBlock();
 					playfield.remove(this);
 				} else {
@@ -156,10 +159,10 @@
 				ny = squares[k].y + dy;
 				
 				returnVal = returnVal 
-					|| nx < playfield.playfieldLeft 
-					|| nx + 7 > playfield.playfieldRight
-					|| ny < playfield.playfieldTop
-					|| ny + 7 > playfield.playfieldBottom;
+					|| nx < Playfield.playfieldLeft 
+					|| nx + 7 > Playfield.playfieldRight
+					|| ny < Playfield.playfieldTop
+					|| ny + 7 > Playfield.playfieldBottom;
 			}
 			
 			return returnVal;

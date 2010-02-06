@@ -14,6 +14,21 @@
 			setCollisionRect(6, 6, 1, 1);
 		}
 		
+		public function get gridX():int {
+			return (x - Playfield.playfieldLeft) / 7;
+		}
+		
+		public function set gridX(val:int):void {
+			x = Playfield.playfieldLeft + (val * 7);
+		}
+		
+		public function get gridY():int {
+			return (y - Playfield.playfieldTop) / 7;
+		}
+		
+		public function set gridY(val:int):void {
+			y = Playfield.playfieldTop + (val * 7)
+		}
 	}
 
 }
