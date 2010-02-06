@@ -8,10 +8,15 @@
 		[Embed(source = '../resources/square.png')] private static var imgSquare:Class;
 		private static var sprSquare:SpriteMap = FP.getSprite(imgSquare, 8, 8);
 		
+		public var id:String;
+		
 		public function Square() 
 		{
 			sprite = sprSquare;
 			setCollisionRect(6, 6, 1, 1);
+			
+			var now:Date = new Date();
+			id = "id" + now.getTime();
 		}
 		
 		public function get gridX():int {

@@ -5,6 +5,11 @@
 	import punk.core.Entity;
 	import punk.util.*;
 	
+	/**
+	 * Acts as a container for squares, arranged in a certain shape. Square position is 
+	 * an offset of the block containing it while it is falling. Once a block falls, it is
+	 * destroyed and the squares within it are left on the playfield.
+	 */
 	public class Block extends Actor
 	{
 		public static const UP:int = 0;
@@ -18,15 +23,18 @@
 		private var playfield:Playfield;
 		private var rotation:int;
 		
+		// Booleans for handling when arrows are held down
 		private var leftp:Boolean, rightp:Boolean, turnp:Boolean;
 		
 		[Embed(source = '../resources/block.png')] private var imgBlock:Class;
 		
 		public function Block(p:Playfield) 
 		{
+			// Create contained squares
 			squares = [new Square(), new Square(), new Square(), new Square()];
 			playfield = p;
 			
+			// 
 			var now:Date = new Date();
 			time = now.getTime();
 			
@@ -42,6 +50,7 @@
 			
 			rotation = UP;
 			
+			// Add contained squares to playfield
 			for (var k:int = 0; k < squares.length; k++) {
 				playfield.add(squares[k]);
 			}
@@ -49,22 +58,32 @@
 		
 		override public function update():void {
 			var now:Date = new Date();
+			
+			// Check the time delay
+			// Blocks only move downward every tdelay milliseconds.
 			if (now.getTime() - time > tdelay) {
+				
+				// Have we landed?
 				if (collide("block", 0, 7) || outOfBounds(0, 7)) {
+					
+					// Make squares solid and add to playfield grid
 					for (var k:int = 0; k < squares.length; k++) {
 						squares[k].setCollisionType("block");
 						playfield.rows[squares[k].gridY][squares[k].gridX] = squares[k];
 					}
 					
+					// Check for full lines, cleanup
 					playfield.checkLines();
 					playfield.addBlock();
 					playfield.remove(this);
+					return;
 				} else {
 					y += 7;
 					time = now.getTime();
 				}
 			}
 			
+			// Left movement
 			if (Input.check("left")) {
 				if (!outOfBounds(-7, 0) && !collide("block", -7, 0) && !leftp) {
 					x -= 7;
@@ -74,6 +93,7 @@
 				leftp = false;
 			}
 			
+			// Right Movement
 			if (Input.check("right")) {
 				if (!outOfBounds(7, 0) && !collide("block", 7, 0) && !rightp) {
 					x += 7;
@@ -83,6 +103,7 @@
 				rightp = false;
 			}
 			
+			// Down = smaller delay
 			if (Input.check("down")) {
 				tdelay = 50;
 			} else {
@@ -139,6 +160,14 @@
 			}
 		}
 		
+		/**
+		 * Checks collision by checking collision of each individual square.
+		 * 
+		 * @param	type	Type of object to check collision againts
+		 * @param	dx		Change in X position to check at (ie dx = 4, will check at x + 4)
+		 * @param	dy		Change in Y position to check at
+		 * @return			Entity currently colliding with, or null if no collision occurs
+		 */
 		override public function collide(type:String, dx:int, dy:int):Entity {
 			var returnVal:Entity = null;
 			
@@ -150,6 +179,13 @@
 			return returnVal;
 		}
 		
+		/**
+		 * Checks if any squares are out of the playfield bounds
+		 * 
+		 * @param	dx		Change in X position to check at (ie dx = 4, will check at x + 4)
+		 * @param	dy		Change in Y position to check at
+		 * @return			True if out of bounds, false otherwise
+		 */
 		private function outOfBounds(dx:int, dy:int):Boolean {
 			var returnVal:Boolean = false;
 			
