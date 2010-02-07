@@ -3,6 +3,7 @@
 	import punk.Actor;
 	import FP;
 	import punk.core.Entity;
+	import punk.core.SpriteMap;
 	import punk.util.*;
 	
 	/**
@@ -17,21 +18,54 @@
 		public static const DOWN:int = 2;
 		public static const LEFT:int = 3;
 		
+		public static const
+			J:int = 0,
+			L:int = 1,
+			S:int = 2,
+			Z:int = 3,
+			O:int = 4,
+			I:int = 5,
+			T:int = 6;
+			
+			
+		[Embed(source = "../resources/block_J.xml", mimeType = "application/octet-stream")]private static var blockJ:Class;
+		[Embed(source = "../resources/block_L.xml", mimeType = "application/octet-stream")]private static var blockL:Class;
+		[Embed(source = "../resources/block_S.xml", mimeType = "application/octet-stream")]private static var blockS:Class;
+		[Embed(source = "../resources/block_Z.xml", mimeType = "application/octet-stream")]private static var blockZ:Class;
+		[Embed(source = "../resources/block_O.xml", mimeType = "application/octet-stream")]private static var blockO:Class;
+		[Embed(source = "../resources/block_I.xml", mimeType = "application/octet-stream")]private static var blockI:Class;
+		[Embed(source = "../resources/block_T.xml", mimeType = "application/octet-stream")]private static var blockT:Class;
+		
+		private static var blockJ_XML:XML = XML(new blockJ());
+		private static var blockL_XML:XML = XML(new blockL());
+		private static var blockS_XML:XML = XML(new blockS());
+		private static var blockZ_XML:XML = XML(new blockZ());
+		private static var blockO_XML:XML = XML(new blockO());
+		private static var blockI_XML:XML = XML(new blockI());
+		private static var blockT_XML:XML = XML(new blockT());
+		
+		public static var blocks:Array = [blockJ_XML, blockL_XML, blockS_XML, blockZ_XML, blockO_XML, blockI_XML, blockT_XML];
+		
 		private var squares:Array;
 		private var time:Number;
 		private var tdelay:int = 500;
 		private var playfield:Playfield;
 		private var rotation:int;
+		private var blockXML:XML;
 		
 		// Booleans for handling when arrows are held down
 		private var leftp:Boolean, rightp:Boolean, turnp:Boolean;
 		
-		[Embed(source = '../resources/block.png')] private var imgBlock:Class;
-		
-		public function Block(p:Playfield) 
+		public function Block(p:Playfield, type:int) 
 		{
+			blockXML = blocks[type];
+			
 			// Create contained squares
-			squares = [new Square(), new Square(), new Square(), new Square()];
+			squares = [];
+			for (var k:int = 0; k < blockXML.@squares; k++) {
+				squares.push(new Square(Square.colors[type]));
+			}
+			
 			playfield = p;
 			
 			// 
@@ -50,10 +84,13 @@
 			
 			rotation = UP;
 			
+			
 			// Add contained squares to playfield
-			for (var k:int = 0; k < squares.length; k++) {
+			for (k = 0; k < squares.length; k++) {
 				playfield.add(squares[k]);
 			}
+			
+			updateSquares();
 		}
 		
 		override public function update():void {
@@ -119,44 +156,27 @@
 				turnp = false;
 			}
 			
+			updateSquares();
+		}
+		
+		private function updateSquares():void {
 			// Update position of childen boxes
 			// Positions should be pushed to XML or something
-			if (rotation == UP) {
-				squares[0].x = x + 0;
-				squares[0].y = y + 0;
-				squares[1].x = x + 0;
-				squares[1].y = y + 7;
-				squares[2].x = x + 0;
-				squares[2].y = y + 14;
-				squares[3].x = x + 7;
-				squares[3].y = y + 14;
-			} else if (rotation == RIGHT) {
-				squares[0].x = x + 0;
-				squares[0].y = y + 0;
-				squares[1].x = x + 7;
-				squares[1].y = y + 0;
-				squares[2].x = x + 14;
-				squares[2].y = y + 0;
-				squares[3].x = x + 0;
-				squares[3].y = y + 7;
-			} else if (rotation == DOWN) {
-				squares[0].x = x + 0;
-				squares[0].y = y + 0;
-				squares[1].x = x + 7;
-				squares[1].y = y + 0;
-				squares[2].x = x + 7;
-				squares[2].y = y + 7;
-				squares[3].x = x + 7;
-				squares[3].y = y + 14;
-			} else if (rotation == LEFT) {
-				squares[0].x = x + 0;
-				squares[0].y = y + 7;
-				squares[1].x = x + 7;
-				squares[1].y = y + 7;
-				squares[2].x = x + 14;
-				squares[2].y = y + 7;
-				squares[3].x = x + 14;
-				squares[3].y = y + 0;
+			var orientXML:XML;
+			switch (rotation) {
+				case UP:
+					orientXML = blockXML.up[0]; break;
+				case RIGHT:
+					orientXML = blockXML.right[0]; break;
+				case DOWN:
+					orientXML = blockXML.down[0]; break;
+				case LEFT:
+					orientXML = blockXML.left[0]; break;
+			}
+			
+			for (var m:int = 0; m < orientXML.square.length(); m++) {
+				squares[m].x = x + int(orientXML.square[m].@x);
+				squares[m].y = y + int(orientXML.square[m].@y);
 			}
 		}
 		

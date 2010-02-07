@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<block squares="4">
+	<up>
+		<square x="7" y="0" />
+		<square x="0" y="7" />
+		<square x="7" y="7" />
+		<square x="14" y="7" />
+	</up>
+	<right>
+		<square x="0" y="0" />
+		<square x="0" y="7" />
+		<square x="0" y="14" />
+		<square x="7" y="7" />
+	</right>
+	<down>
+		<square x="0" y="0" />
+		<square x="7" y="0" />
+		<square x="14" y="0" />
+		<square x="7" y="7" />
+	</down>
+	<left>
+		<square x="7" y="0" />
+		<square x="7" y="7" />
+		<square x="7" y="14" />
+		<square x="0" y="7" />
+	</left>
+</block>

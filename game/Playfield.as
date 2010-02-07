@@ -117,7 +117,8 @@
 		 * Creates a new block at the top of the screen
 		 */
 		public function addBlock():void {
-			var b:Block = new Block(this);
+			var type:int = (Math.random() * 7);
+			var b:Block = new Block(this, type);
 			add(b);
 			b.x = playfieldLeft + (28);
 			b.y = playfieldTop;

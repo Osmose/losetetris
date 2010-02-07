@@ -5,12 +5,36 @@
 	
 	public class Square extends Actor
 	{
-		[Embed(source = '../resources/square.png')] private static var imgSquare:Class;
-		private static var sprSquare:SpriteMap = FP.getSprite(imgSquare, 8, 8);
+		// Colors and sprites for squares
+		[Embed(source = '../resources/square_blue.png')] 	private static var imgSquareBlue:Class;
+		[Embed(source = '../resources/square_orange.png')] 	private static var imgSquareOrange:Class;
+		[Embed(source = '../resources/square_green.png')] 	private static var imgSquareGreen:Class;
+		[Embed(source = '../resources/square_red.png')] 	private static var imgSquareRed:Class;
+		[Embed(source = '../resources/square_yellow.png')] 	private static var imgSquareYellow:Class;
+		[Embed(source = '../resources/square_cyan.png')] 	private static var imgSquareCyan:Class;
+		[Embed(source = '../resources/square_purple.png')] 	private static var imgSquarePurple:Class;
+	
+		private static var sprSquareBlue:SpriteMap 		= FP.getSprite(imgSquareBlue, 8, 8);
+		private static var sprSquareOrange:SpriteMap 	= FP.getSprite(imgSquareOrange, 8, 8);
+		private static var sprSquareGreen:SpriteMap 	= FP.getSprite(imgSquareGreen, 8, 8);
+		private static var sprSquareRed:SpriteMap 		= FP.getSprite(imgSquareRed, 8, 8);
+		private static var sprSquareYellow:SpriteMap 	= FP.getSprite(imgSquareYellow, 8, 8);
+		private static var sprSquareCyan:SpriteMap 		= FP.getSprite(imgSquareCyan, 8, 8);
+		private static var sprSquarePurple:SpriteMap 	= FP.getSprite(imgSquarePurple, 8, 8);
+		
+		public static var colors:Array = [
+			sprSquareBlue, 
+			sprSquareCyan, 
+			sprSquareGreen, 
+			sprSquareOrange, 
+			sprSquarePurple, 
+			sprSquareRed,
+			sprSquareYellow
+		];
 		
 		public var id:String;
 		
-		public function Square() 
+		public function Square(sprSquare:SpriteMap) 
 		{
 			sprite = sprSquare;
 			setCollisionRect(6, 6, 1, 1);
